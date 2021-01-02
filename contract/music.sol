@@ -72,25 +72,17 @@ constructor() public payable{
         latestMusicId++;
     }
 
-// // 定义一个修饰符，检查支付的金额是否足以覆盖价格
-//      modifier paidEnough(uint _price) { 
-//     require(msg.value >= _price); 
-//     _;
-//   }
-  
-
-  
-    function buyToHashtag(bytes32 _hashtag) public payable{
+    function buyToHashtag(bytes32 _hashtag,uint256 _id) public payable{
         //未实现:在购买那里加一个一旦下载一次就向music.address转账，转账金额以每一个创作者填的价格为准
-        //paidEnough(musicById1[_hashtag].price);
-        if(checkExisting(_hashtag)) {
+        if(!checkExisting(_hashtag)) {
         if(!checkExistingBuy(_hashtag)) {
             boughtHashtags[msg.sender].push(_hashtag);
              
-        //     address payable addr = address(uint160(0x565486818BD325ab280BB206560D6aB236353352));
+        Music memory test  = musicById[_id];
+             
+        //     address payable addr = address(uint160(musicById[_id].author));
         // //输入地址，给相应地址转账5 个以太币，这里是的单位是Gwei,addr是收款地址
-        // addr.transfer(5* 10**18);
-    
+        // addr.transfer(musicById[_id].price);
     
             hashtagScore[_hashtag]++;
             hashtags = sortHashtagsByScore();
@@ -168,7 +160,8 @@ constructor() public payable{
     
     function checkExisting(bytes32 _hashtag) public view returns(bool) {
         for(uint256 i = 0; i < hashtags.length; i++) {
-            if(hashtags[i] == _hashtag) return true;
+            if(hashtags[i] == _hashtag)
+            return true;
         }
         return false;
     }
