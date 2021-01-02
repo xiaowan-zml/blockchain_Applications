@@ -8,12 +8,12 @@ contract music {
         address payable author;
         uint256 date;
         string music;
-        address maddress;
+        bytes32 maddress;
         uint256 price;
         bytes32[] hashtags;  //音乐的标签，里面可以存好多音乐
     }
 
-    event MusicAdded(uint256 indexed id, address indexed author, uint256 indexed date, string music,address maddress, bytes32[] hashtags,uint256 price);
+    event MusicAdded(uint256 indexed id, address indexed author, uint256 indexed date, string music,bytes32 maddress, bytes32[] hashtags,uint256 price);
 
     mapping(address => bytes32[]) public boughtHashtags;
     mapping(bytes32 => uint256) public hashtagScore; // The number of times this hashtag has been used, used to sort the top hashtags
@@ -33,9 +33,15 @@ constructor() public payable{
     }
     
     //添加音乐
-    function addMusic(string memory _music, bytes32[] memory _hashtags,uint256 _price) public {
+    function addMusic(string memory _music, bytes32[] memory _hashtags,uint256 _price,string memory _maddress) public {
         require(bytes(_music).length > 0, 'The music cannot be empty');
-        Music memory newMusic = Music(latestMusicId, msg.sender, now, _music,msg.sender,_price,_hashtags);
+        
+        bytes32 _mdhash = keccak256(abi.encodePacked(_maddress));
+        
+         for(uint32 b=0;b<hashtags.length;b++){
+        require(keccak256(abi.encodePacked(musicById[b].maddress)) != keccak256(abi.encodePacked(_mdhash)),"exit");
+        }
+        Music memory newMusic = Music(latestMusicId, msg.sender, now, _music,_mdhash,_price,_hashtags);
 
         if(_hashtags.length == 0) {
             musicByHashtag['general'].push(newMusic);
@@ -62,7 +68,7 @@ constructor() public payable{
             users.push(msg.sender);
             doesUserExist[msg.sender] = true;
         }
-        emit MusicAdded(latestMusicId, msg.sender, now, _music,msg.sender, _hashtags,_price);
+        emit MusicAdded(latestMusicId, msg.sender, now, _music,_mdhash, _hashtags,_price);
         latestMusicId++;
     }
 
@@ -77,13 +83,13 @@ constructor() public payable{
     function buyToHashtag(bytes32 _hashtag) public payable{
         //未实现:在购买那里加一个一旦下载一次就向music.address转账，转账金额以每一个创作者填的价格为准
         //paidEnough(musicById1[_hashtag].price);
-        if(!checkExisting(_hashtag)) {
+        if(checkExisting(_hashtag)) {
         if(!checkExistingBuy(_hashtag)) {
             boughtHashtags[msg.sender].push(_hashtag);
              
-            address payable addr = address(uint160(0x565486818BD325ab280BB206560D6aB236353352));
-        //输入地址，给相应地址转账5 个以太币，这里是的单位是Gwei,addr是收款地址
-        addr.transfer(5* 10**18);
+        //     address payable addr = address(uint160(0x565486818BD325ab280BB206560D6aB236353352));
+        // //输入地址，给相应地址转账5 个以太币，这里是的单位是Gwei,addr是收款地址
+        // addr.transfer(5* 10**18);
     
     
             hashtagScore[_hashtag]++;
