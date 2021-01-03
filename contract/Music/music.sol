@@ -1,7 +1,12 @@
 //SPDX-License-Identifier: music
 pragma solidity ^0.6.2;
 
-contract music {
+import "../roles/Roles.sol";
+import "../roles/originator.sol";
+import "../roles/audience.sol";
+
+
+contract music is Originator,Audience  {
     uint256 public test1;   //保存指定地址的合约的余额
     struct Music {
         uint256 id;
@@ -15,25 +20,25 @@ contract music {
 
     event MusicAdded(uint256 indexed id, address indexed author, uint256 indexed date, string music,bytes32 maddress, bytes32[] hashtags,uint256 price);
 
-    mapping(address => bytes32[]) public boughtHashtags;
-    mapping(bytes32 => uint256) public hashtagScore; // The number of times this hashtag has been used, used to sort the top hashtags
-    mapping(bytes32 => Music[]) public musicByHashtag;
-    mapping(uint256 => Music) public musicById;
-    mapping(bytes32 => Music) public musicById1;
-    mapping(bytes32 => bool) public doesHashtagExist;
-    mapping(address => bool) public doesUserExist;
+    mapping(address => bytes32[]) boughtHashtags;
+    mapping(bytes32 => uint256) hashtagScore; // The number of times this hashtag has been used, used to sort the top hashtags
+    mapping(bytes32 => Music[]) musicByHashtag;
+    mapping(uint256 => Music) musicById;
+    mapping(bytes32 => bool) doesHashtagExist;
+    mapping(address => bool) doesUserExist;
     address[] public users;
     Music[] public musics;
     bytes32[] public hashtags;
     uint256 public latestMusicId;
+    
 
-constructor() public payable{
-    test1 = 0;
-        
+    constructor() public payable{
+    
     }
     
     //添加音乐
-    function addMusic(string memory _music, bytes32[] memory _hashtags,uint256 _price,string memory _maddress) public {
+    function addMusic(string memory _music, bytes32[] memory _hashtags,uint256 _price,string memory _maddress) public onlyOriginator
+    {
         require(bytes(_music).length > 0, 'The music cannot be empty');
         
         bytes32 _mdhash = keccak256(abi.encodePacked(_maddress));
@@ -61,6 +66,7 @@ constructor() public payable{
                 }
             }
         }
+        
         hashtags = sortHashtagsByScore();
         musicById[latestMusicId] = newMusic;
         musics.push(newMusic);
@@ -74,24 +80,28 @@ constructor() public payable{
 
     function buyToHashtag(bytes32 _hashtag,uint256 _id) public payable{
         //未实现:在购买那里加一个一旦下载一次就向music.address转账，转账金额以每一个创作者填的价格为准
-        if(!checkExisting(_hashtag)) {
+       for(uint32 i=0;i<musics.length;i++){
+        require(musicById[i].id == _id,"music not exit");
+        ///require(doesHashtagExist[_hashtag[i]],"hashtags not exit");
+        
         if(!checkExistingBuy(_hashtag)) {
-            boughtHashtags[msg.sender].push(_hashtag);
-             
+            
+                
         Music memory test  = musicById[_id];
-             
-        //     address payable addr = address(uint160(musicById[_id].author));
-        // //输入地址，给相应地址转账5 个以太币，这里是的单位是Gwei,addr是收款地址
-        // addr.transfer(musicById[_id].price);
-    
+        address payable addr = address(uint160(test.author));
+        //输入地址，给相应地址转账,addr是收款地址
+        addr.transfer(test.price);
+            
+            boughtHashtags[msg.sender].push(_hashtag);
             hashtagScore[_hashtag]++;
             hashtags = sortHashtagsByScore();
         }
     }
 }
 //输入地址，获取整个地址的余额
-    function getblance(address payable addr)public payable returns(uint256 test1){
-        test1 = addr.balance;
+    function getblance(address payable addr)public view returns(uint256){
+        uint256 test1 = addr.balance;
+        return test1;
     }
     
     function getTopHashtags(uint256 _amount) public view returns(bytes32[] memory) {
@@ -130,6 +140,7 @@ constructor() public payable{
      //未实现:如果这个人买了，就返回maddress,如果没有就返回null
         return (c.id, c.author, c.date, c.music,"null", c.hashtags,c.price);
     }
+    
 
    
     function sortHashtagsByScore() public view returns(bytes32[] memory) {
@@ -158,11 +169,5 @@ constructor() public payable{
         return false;
     }
     
-    function checkExisting(bytes32 _hashtag) public view returns(bool) {
-        for(uint256 i = 0; i < hashtags.length; i++) {
-            if(hashtags[i] == _hashtag)
-            return true;
-        }
-        return false;
-    }
+    
 }
