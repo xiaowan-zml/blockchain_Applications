@@ -2,10 +2,6 @@
 
 # blockchain_Applications
 
-[TOC]
-
-
-
 ## 1.概述
 
 ​       随着知识全球化与经济全球化的步伐不断加快，知识经济的兴起速度呈现急速上涨的态势，中国文娱产业经过快速发展与变革，各种商业模式创新不断涌现，文娱内容形式更加多样化，总体来看，人均可支配收入提升、消费结构升级、移动互联网快速发展、产业政策扶持力度加大等积极因素驱动着中国文娱产业迅速发展，知识产权也日益成为了提升市场竞争力的决定性核心要素。音乐在创作、发布以及管理的过程中积累的具有一定价值的数字化内容和信息，形成了种类繁多、数量巨大的数字资产，然而，传统的音乐产业资产管理模式存在在着数据中心化程度过高、数据安全风险大、数据共享效率低下、数据利用价值不充分，收益分配不合理等问题。
@@ -14,9 +10,13 @@
 
 ### 1.1 背景
 
+![images](https://github.com/xiaowan-zml/blockchain_Applications/blob/main/image/tu2.png)   
+
 ​                                                图一：作品版权登记流程
 
 ​          传统网络的用户认证采用中央认证中心方式，整个系统的安全性完全依赖于集中部署的认证中心和相应的内部管理人员身上。申请的历时长，且经手的人多。
+
+![images](https://github.com/xiaowan-zml/blockchain_Applications/blob/main/image/tu1.png)   
 
 ​                                                图二：《[艾媒咨询:2015-2016年中国手机音乐客户端市场研究报告](http://report.iimedia.cn/repo1-0/1444.html)》
 
@@ -31,6 +31,8 @@
 ## 2.系统分析
 
 ### 2.1 系统总结构
+
+![images](https://github.com/xiaowan-zml/blockchain_Applications/blob/main/image/tu3.png)   
 
 ​                                                                           图3
 
