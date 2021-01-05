@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <script type="text/javascript" src="../public/jquery.js"></script>
+    <script type="text/javascript" src="../public/web3.min.js"></script>
+    <link rel="stylesheet" href="../public/app.css" />
+    <meta name="viewport"
+        content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <link rel="stylesheet" type="text/css" href="../public/style.css">
+    <title>音乐区块链
+    </title>
+</head>
+
+<body>
+    <h2>音乐区块链</h2>
+    <div class="container">
+        <h1 style="text-align: center;">听众</h1>
+        <hr>
+    </div>
+
+    <button class="enableEthereumButton">连接账户</button>
+    <h5>账户: <span class="showAccount"></span></h5>
+    请选择身份：<select>
+        <option value="">如果您选择的身份不正确会导致无法正常使用某些功能</option>
+        <option value="5">首页</option>
+        <option value="1">创作者</option>
+        <option value="2">观众</option>
+    </select>
+    <hr />
+
+    <script type="text/javascript">
+        $(function () { 
+            $("select").on("change", function () { 
+                console.log($(this).val()); 
+                switch ($(this).val()) { 
+                    case "1": 
+            // 界面1
+            $("#content p").text($("select option:selected").text());
+            window.location='originator.html'
+            break;
+            case "2": 
+            // 界面2
+            $("#content p").text($("select option:selected").text());
+            window.location='audience.html'
+            break;
+            //界面5
+            case "5": 
+            $("#content p").text($("select option:selected").text());
+            window.location='app.html'
+            break;
+            default:$("#content").removeClass();
+            break;}});});
+            </script>
+
+<div id="ftc-make">
+    <h2>checkExistingBuy 查询
+    </h2>
+    <div class="form-group">
+       标签
+        <br>
+        <input type="text" id="hash2" name="hash2" value="" placeholder="请输入音乐标签">
+        <br>
+        <div class=button-div>
+            <button class="btn-fetchOne" id="btn_checkExistingBuy" type="button">查询</button>
+        </div>
+        <br>
+        <h5><span class="checkExistingBuy"></span></h5>
+    </div>
+</div>
+
+
+    <div id="ftc-make">
+        <h2>buyToHashtag 购买音乐
+        </h2>
+        <div class="form-group">
+           标签
+            <br>
+            <input type="text" id="hash1" name="hash1" value="" placeholder="请输入音乐标签">
+            <br>
+           音乐id
+            <br>
+            <input type="text" id="id1" name="id1" value="" placeholder='请输入音乐id'>
+            <br>
+            <div class=button-div>
+                <button class="btn-fetchOne" id="btn_buyToHashtag" type="button">购买</button>
+            </div>
+            <br>
+            <h5><span class="buyToHashtag"></span></h5>
+        </div>
+    </div>
+
+
+    <div class=form-break></div>
+
+
+<hr>
+    <script type="text/javascript" src="../app.js"></script>
+</body>
+
+</html>
